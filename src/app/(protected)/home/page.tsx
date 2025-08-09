@@ -1,19 +1,14 @@
-import { signOut } from '@/auth';
 import React from 'react';
+
+import Calendar from '@/components/shared/calendar';
 
 const Home = () => {
   return (
-    <div>
-      <form
-        action={async () => {
-          'use server';
-
-          await signOut();
-        }}
-      >
-        <button type="submit">Logout</button>
-      </form>
-    </div>
+    <section className="flex flex-col items-center justify-center h-screen p-4 bg-gray-100">
+      <div className="flex flex-col items-center justify-center rounded-lg p-6 border border-gray-200 shadow-md">
+        <Calendar />
+      </div>
+    </section>
   );
 };
 
