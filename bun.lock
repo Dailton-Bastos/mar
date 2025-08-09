@@ -4,6 +4,7 @@
     "": {
       "name": "mar",
       "dependencies": {
+        "@ramonak/react-progress-bar": "^5.4.0",
         "next": "15.4.5",
         "next-auth": "^5.0.0-beta.29",
         "react": "19.1.0",
@@ -123,6 +124,8 @@
     "@next/swc-win32-x64-msvc": ["@next/swc-win32-x64-msvc@15.4.5", "", { "os": "win32", "cpu": "x64" }, "sha512-voWk7XtGvlsP+w8VBz7lqp8Y+dYw/MTI4KeS0gTVtfdhdJ5QwhXLmNrndFOin/MDoCvUaLWMkYKATaCoUkt2/A=="],
 
     "@panva/hkdf": ["@panva/hkdf@1.2.1", "", {}, "sha512-6oclG6Y3PiDFcoyk8srjLfVKyMfVCKJ27JwNPViuXziFpmdz+MZnZN/aKY0JGXgYuO/VghU0jcOAZgWXZ1Dmrw=="],
+
+    "@ramonak/react-progress-bar": ["@ramonak/react-progress-bar@5.4.0", "", { "peerDependencies": { "react": "^16.0.0 || ^17 || ^18 || ^19", "react-dom": "^16.0.0 || ^17 || ^18 || ^19" } }, "sha512-3MJ0TKPw7xhearDuO6egIRQrvuERoLn6CVc2hKnw89iEegUL6DzMY7Rptmz2KaHjK0zbev+PGyyvDW+IK4FJBg=="],
 
     "@swc/helpers": ["@swc/helpers@0.5.15", "", { "dependencies": { "tslib": "^2.8.0" } }, "sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g=="],
 

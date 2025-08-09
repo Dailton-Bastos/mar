@@ -12,6 +12,7 @@
 		"format:fix": "biome format --write"
 	},
 	"dependencies": {
+		"@ramonak/react-progress-bar": "^5.4.0",
 		"next": "15.4.5",
 		"next-auth": "^5.0.0-beta.29",
 		"react": "19.1.0",

@@ -19,11 +19,6 @@ const Calendar = () => {
       locale={ptBR}
       selected={selected}
       onSelect={setSelected}
-      footer={
-        selected
-          ? `Selected: ${selected.toLocaleDateString('pt-BR')}`
-          : 'Pick a day.'
-      }
     />
   );
 };
