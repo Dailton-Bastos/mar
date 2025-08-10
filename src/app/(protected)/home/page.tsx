@@ -3,6 +3,7 @@ import React from 'react';
 import Calendar from '@/components/shared/calendar';
 import Progress from '@/components/progress';
 import AddButton from '@/components/shared/add-button';
+import Form from '@/components/form';
 
 const Home = () => {
   return (
@@ -11,6 +12,7 @@ const Home = () => {
         <Calendar />
         <Progress />
         <AddButton />
+        <Form />
       </div>
     </section>
   );
