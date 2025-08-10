@@ -16,19 +16,19 @@ export default auth((req) => {
     return Response.redirect(new URL('/home', nextUrl));
   }
 
-  // if (!isLoggedIn && !isLoginRoute) {
-  //   let callbackUrl = nextUrl.pathname;
+  if (!isLoggedIn && !isLoginRoute) {
+    let callbackUrl = nextUrl.pathname;
 
-  //   if (nextUrl.search) {
-  //     callbackUrl += nextUrl.search;
-  //   }
+    if (nextUrl.search) {
+      callbackUrl += nextUrl.search;
+    }
 
-  //   const encodedCallbackUrl = encodeURIComponent(callbackUrl);
+    const encodedCallbackUrl = encodeURIComponent(callbackUrl);
 
-  //   return Response.redirect(
-  //     new URL(`/?callbackUrl=${encodedCallbackUrl}`, nextUrl)
-  //   );
-  // }
+    return Response.redirect(
+      new URL(`/?callbackUrl=${encodedCallbackUrl}`, nextUrl)
+    );
+  }
 
   return null;
 });
