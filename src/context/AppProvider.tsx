@@ -6,6 +6,7 @@ import { AppContext } from './AppContext';
 import { Progress, User } from '@prisma/client';
 import { currentUser } from '@/actions/auth';
 import { getUserByEmailAction } from '@/actions/user';
+import { getUserAllProgressAction } from '@/actions/progress';
 
 const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -23,9 +24,29 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
     setUser(user);
   }, []);
 
+  const getProgress = useCallback(async () => {
+    if (!user) {
+      setProgress([]);
+      return;
+    }
+
+    const progress = await getUserAllProgressAction(user?.id);
+
+    if (!progress.success) {
+      setProgress([]);
+      return;
+    }
+
+    setProgress(progress?.data || []);
+  }, [user]);
+
   useEffect(() => {
     getUser();
   }, [getUser]);
+
+  useEffect(() => {
+    getProgress();
+  }, [getProgress]);
 
   return (
     <AppContext.Provider value={{ user, progress }}>

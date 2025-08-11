@@ -9,4 +9,14 @@ const addProgress = async (progress: Prisma.ProgressCreateInput) => {
   return newProgress;
 };
 
-export { addProgress };
+const getUserAllProgress = async (userId: number) => {
+  const progress = await db.progress.findMany({
+    where: {
+      userId,
+    },
+  });
+
+  return progress;
+};
+
+export { addProgress, getUserAllProgress };
