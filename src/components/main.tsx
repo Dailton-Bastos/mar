@@ -32,6 +32,7 @@ export const Main = () => {
         open={modalOpen}
         onClose={handleCloseModal}
         selectedDate={selectedDate}
+        handleSelectDate={handleSelectDate}
       />
     </main>
   );

@@ -16,10 +16,11 @@ type Progress = {
 type FormProps = {
   open: boolean;
   onClose: () => void;
-  selectedDate?: Date;
+  selectedDate: Date;
+  handleSelectDate: (date: Date) => void;
 };
 
-const Form = ({ open, onClose, selectedDate }: FormProps) => {
+const Form = ({ open, onClose, selectedDate, handleSelectDate }: FormProps) => {
   const [isPending, startTransition] = useTransition();
   const [errorMessage, setErrorMessage] = useState('');
   const [progress, setProgress] = useState<Progress>({
@@ -65,11 +66,17 @@ const Form = ({ open, onClose, selectedDate }: FormProps) => {
       return;
     }
 
+    if (!selectedDate) {
+      setErrorMessage('Data não selecionada');
+      return;
+    }
+
     setErrorMessage('');
 
     startTransition(async () => {
       const response = await addProgressAction({
         ...data,
+        date: selectedDate,
         user: {
           connect: {
             id: user.id,
@@ -89,6 +96,7 @@ const Form = ({ open, onClose, selectedDate }: FormProps) => {
       });
 
       setErrorMessage('');
+      handleSelectDate(new Date());
       onClose();
     });
   };
