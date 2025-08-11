@@ -1,0 +1,37 @@
+'use client';
+
+import React, { useCallback, useEffect, useState } from 'react';
+
+import { AppContext } from './AppContext';
+import { Progress, User } from '@prisma/client';
+import { currentUser } from '@/actions/auth';
+import { getUserByEmailAction } from '@/actions/user';
+
+const AppProvider = ({ children }: { children: React.ReactNode }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [progress, setProgress] = useState<Progress[]>([]);
+
+  const getUser = useCallback(async () => {
+    const session = await currentUser();
+
+    if (!session?.email) {
+      setUser(null);
+      return;
+    }
+
+    const user = await getUserByEmailAction(session?.email);
+    setUser(user);
+  }, []);
+
+  useEffect(() => {
+    getUser();
+  }, [getUser]);
+
+  return (
+    <AppContext.Provider value={{ user, progress }}>
+      {children}
+    </AppContext.Provider>
+  );
+};
+
+export { AppProvider };

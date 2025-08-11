@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Modal } from 'react-responsive-modal';
 import { removeLeftZero } from '@/utils';
+import { useApp } from '@/hooks/useApp';
 
 type Progress = {
   hours: string;
@@ -23,6 +24,8 @@ const Form = ({ open, onClose, selectedDate }: FormProps) => {
     minutes: '00',
     mining: '0',
   });
+
+  const { user } = useApp();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setProgress({
@@ -56,6 +59,8 @@ const Form = ({ open, onClose, selectedDate }: FormProps) => {
 
     setErrorMessage('');
   };
+
+  console.log(user);
 
   return (
     <Modal
