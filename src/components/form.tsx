@@ -1,9 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useTransition } from 'react';
 import { Modal } from 'react-responsive-modal';
 import { removeLeftZero } from '@/utils';
 import { useApp } from '@/hooks/useApp';
+import { addProgressAction } from '@/actions/progress';
+import { IconLoading } from './shared/icon-loading';
 
 type Progress = {
   hours: string;
@@ -18,6 +20,7 @@ type FormProps = {
 };
 
 const Form = ({ open, onClose, selectedDate }: FormProps) => {
+  const [isPending, startTransition] = useTransition();
   const [errorMessage, setErrorMessage] = useState('');
   const [progress, setProgress] = useState<Progress>({
     hours: '00',
@@ -38,7 +41,7 @@ const Form = ({ open, onClose, selectedDate }: FormProps) => {
     (value) => Number(value) === 0
   );
 
-  const disabledSubmit = isInvalid;
+  const disabledSubmit = isInvalid || isPending;
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -57,10 +60,38 @@ const Form = ({ open, onClose, selectedDate }: FormProps) => {
       return;
     }
 
-    setErrorMessage('');
-  };
+    if (!user) {
+      setErrorMessage('Usuário não encontrado');
+      return;
+    }
 
-  console.log(user);
+    setErrorMessage('');
+
+    startTransition(async () => {
+      const response = await addProgressAction({
+        ...data,
+        user: {
+          connect: {
+            id: user.id,
+          },
+        },
+      });
+
+      if (!response.success) {
+        setErrorMessage('Ocorreu um erro, tente novamente!');
+        return;
+      }
+
+      setProgress({
+        hours: '00',
+        minutes: '00',
+        mining: '0',
+      });
+
+      setErrorMessage('');
+      onClose();
+    });
+  };
 
   return (
     <Modal
@@ -164,6 +195,7 @@ const Form = ({ open, onClose, selectedDate }: FormProps) => {
           <button
             type="button"
             className="w-full bg-gray-200 rounded-md p-2 text-gray-500 font-semibold cursor-pointer"
+            disabled={isPending}
             onClick={onClose}
           >
             Cancelar
@@ -174,7 +206,7 @@ const Form = ({ open, onClose, selectedDate }: FormProps) => {
             disabled={disabledSubmit}
             className="w-full bg-blue-800 text-white rounded-md p-2 font-semibold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Adicionar
+            {isPending ? <IconLoading /> : 'Adicionar'}
           </button>
         </div>
 
