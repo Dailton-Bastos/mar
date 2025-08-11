@@ -1,14 +1,17 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { DayPicker } from 'react-day-picker';
 import { ptBR } from 'react-day-picker/locale';
 
 import 'react-day-picker/style.css';
 
-const Calendar = () => {
-  const [selected, setSelected] = useState<Date>(new Date());
+type CalendarProps = {
+  onSelect: (date: Date) => void;
+  selectedDate: Date;
+};
 
+const Calendar = ({ onSelect, selectedDate }: CalendarProps) => {
   return (
     <DayPicker
       animate
@@ -17,8 +20,8 @@ const Calendar = () => {
       endMonth={new Date()}
       disabled={{ after: new Date() }}
       locale={ptBR}
-      selected={selected}
-      onSelect={setSelected}
+      selected={selectedDate}
+      onSelect={onSelect}
     />
   );
 };

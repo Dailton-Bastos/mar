@@ -10,7 +10,13 @@ type Progress = {
   mining: string;
 };
 
-const Form = () => {
+type FormProps = {
+  open: boolean;
+  onClose: () => void;
+  selectedDate?: Date;
+};
+
+const Form = ({ open, onClose, selectedDate }: FormProps) => {
   const [errorMessage, setErrorMessage] = useState('');
   const [progress, setProgress] = useState<Progress>({
     hours: '00',
@@ -53,8 +59,8 @@ const Form = () => {
 
   return (
     <Modal
-      open
-      onClose={() => {}}
+      open={open}
+      onClose={onClose}
       center
       styles={{
         modal: {
@@ -66,7 +72,11 @@ const Form = () => {
       }}
     >
       <form className="w-full" onSubmit={handleSubmit}>
-        <span className="text-sm text-gray-500 font-semibold">09/08/2025</span>
+        {selectedDate && (
+          <span className="text-sm text-gray-500 font-semibold">
+            {selectedDate.toLocaleDateString('pt-BR')}
+          </span>
+        )}
 
         <div className="w-full border border-gray-200 rounded-md p-2 mt-4">
           <span className="text-sm text-gray-500 font-bold text-center block">
@@ -148,7 +158,8 @@ const Form = () => {
         <div className="flex items-center justify-between mt-4 gap-2">
           <button
             type="button"
-            className="w-full bg-gray-200 rounded-md p-2 text-gray-500 font-semibold"
+            className="w-full bg-gray-200 rounded-md p-2 text-gray-500 font-semibold cursor-pointer"
+            onClick={onClose}
           >
             Cancelar
           </button>
@@ -156,7 +167,7 @@ const Form = () => {
           <button
             type="submit"
             disabled={disabledSubmit}
-            className="w-full bg-blue-800 text-white rounded-md p-2 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-blue-800 text-white rounded-md p-2 font-semibold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Adicionar
           </button>
