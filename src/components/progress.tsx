@@ -18,12 +18,21 @@ const Progress = () => {
   ];
 
   const totalDays = uniqueDays?.length || 0;
-  const totalHours = progress?.reduce((acc, curr) => acc + curr.hours, 0) || 0;
+  const progressHours =
+    progress?.reduce((acc, curr) => acc + curr.hours, 0) || 0;
+  const progressMinutes =
+    progress?.reduce((acc, curr) => acc + curr.minutes, 0) || 0;
+
+  const totalInMinutes = progressHours * 60 + progressMinutes;
+
+  const hours = Math.floor(totalInMinutes / 60);
+  const minutes = Math.floor(totalInMinutes % 60);
+
   const totalMining =
     progress?.reduce((acc, curr) => acc + curr.mining, 0) || 0;
 
   const completedDaysPercentage = (totalDays / MAX_DAYS) * 100;
-  const completedHoursPercentage = (totalHours / MAX_HOURS) * 100;
+  const completedHoursPercentage = (hours / MAX_HOURS) * 100;
   const completedMiningPercentage = (totalMining / MAX_MINING) * 100;
 
   const completedPercentage = Math.round(
@@ -32,6 +41,10 @@ const Progress = () => {
       completedMiningPercentage) /
       3
   );
+
+  const formattedHours = `${hours.toString().padStart(2, '0')}:${minutes
+    .toString()
+    .padStart(2, '0')}`;
 
   return (
     <div className="w-full mt-4">
@@ -48,7 +61,7 @@ const Progress = () => {
         <div className="flex flex-col items-start justify-center">
           <span className="text-sm text-blue-800 font-semibold">Horas</span>
           <span className="text-sm text-gray-500">
-            {totalHours}/{MAX_HOURS}
+            {formattedHours}/{MAX_HOURS}
           </span>
         </div>
 
