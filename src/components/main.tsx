@@ -8,11 +8,17 @@ import AddButton from '@/components/shared/add-button';
 import Form from '@/components/form';
 import { useApp } from '@/hooks/useApp';
 import { IconLoading } from './shared/icon-loading';
+import ProgressDateModal from './progress-date';
 
 export const Main = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [modalOpen, setModalOpen] = useState(false);
-  const { isLoadingProgress } = useApp();
+  const [progressDateModalOpen, setProgressDateModalOpen] = useState(false);
+  const { isLoadingProgress, progress: progressList } = useApp();
+
+  const progressByDate = progressList?.filter(
+    (progress) => progress.date.toDateString() === selectedDate.toDateString()
+  );
 
   const handleSelectDate = (date: Date) => {
     setSelectedDate(date);
@@ -26,23 +32,54 @@ export const Main = () => {
     setModalOpen(false);
   };
 
+  const handleOpenProgressDateModal = () => {
+    setProgressDateModalOpen(true);
+  };
+
+  const handleCloseProgressDateModal = () => {
+    setProgressDateModalOpen(false);
+  };
+
   return (
-    <main className="flex flex-col items-center justify-center rounded-lg p-6 border border-gray-200 shadow-md">
-      <Calendar onSelect={handleSelectDate} selectedDate={selectedDate} />
-      {isLoadingProgress ? (
-        <div className="flex items-center justify-center">
-          <IconLoading />
-        </div>
-      ) : (
-        <Progress />
-      )}
-      <AddButton onClick={handleOpenModal} />
-      <Form
-        open={modalOpen}
-        onClose={handleCloseModal}
-        selectedDate={selectedDate}
-        handleSelectDate={handleSelectDate}
-      />
-    </main>
+    <div className="w-full h-full flex items-center justify-center">
+      <main className="flex flex-col items-center justify-center rounded-lg p-6 border border-gray-200 shadow-md">
+        <Calendar onSelect={handleSelectDate} selectedDate={selectedDate} />
+        {isLoadingProgress ? (
+          <div className="flex items-center justify-center">
+            <IconLoading />
+          </div>
+        ) : (
+          <Progress />
+        )}
+        <AddButton onClick={handleOpenModal} />
+
+        {progressByDate && progressByDate.length > 0 && (
+          <div className="w-full flex items-center justify-center mt-4">
+            <button
+              type="button"
+              className="text-xs text-blue-800 font-semibold cursor-pointer"
+              onClick={handleOpenProgressDateModal}
+            >
+              Ver registros deste dia
+            </button>
+          </div>
+        )}
+
+        <Form
+          open={modalOpen}
+          onClose={handleCloseModal}
+          selectedDate={selectedDate}
+          handleSelectDate={handleSelectDate}
+        />
+
+        {progressByDate && progressByDate.length > 0 && (
+          <ProgressDateModal
+            open={progressDateModalOpen}
+            onClose={handleCloseProgressDateModal}
+            progressList={progressByDate}
+          />
+        )}
+      </main>
+    </div>
   );
 };
