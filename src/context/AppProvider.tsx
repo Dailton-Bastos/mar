@@ -11,6 +11,7 @@ import { getUserAllProgressAction } from '@/actions/progress';
 const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [progress, setProgress] = useState<Progress[]>([]);
+  const [isLoadingProgress, setIsLoadingProgress] = useState(false);
 
   const getUser = useCallback(async () => {
     const session = await currentUser();
@@ -30,6 +31,8 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
       return;
     }
 
+    setIsLoadingProgress(true);
+
     const progress = await getUserAllProgressAction(user?.id);
 
     if (!progress.success) {
@@ -38,7 +41,12 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     setProgress(progress?.data || []);
+    setIsLoadingProgress(false);
   }, [user]);
+
+  const updateProgress = useCallback((newProgress: Progress) => {
+    setProgress((prev) => [...prev, newProgress]);
+  }, []);
 
   useEffect(() => {
     getUser();
@@ -49,7 +57,9 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
   }, [getProgress]);
 
   return (
-    <AppContext.Provider value={{ user, progress }}>
+    <AppContext.Provider
+      value={{ user, progress, isLoadingProgress, updateProgress }}
+    >
       {children}
     </AppContext.Provider>
   );

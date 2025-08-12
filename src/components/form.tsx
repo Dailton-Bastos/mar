@@ -29,7 +29,7 @@ const Form = ({ open, onClose, selectedDate, handleSelectDate }: FormProps) => {
     mining: '0',
   });
 
-  const { user } = useApp();
+  const { user, updateProgress } = useApp();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setProgress({
@@ -94,6 +94,10 @@ const Form = ({ open, onClose, selectedDate, handleSelectDate }: FormProps) => {
         minutes: '00',
         mining: '0',
       });
+
+      if (response?.data) {
+        updateProgress(response.data);
+      }
 
       setErrorMessage('');
       handleSelectDate(new Date());
