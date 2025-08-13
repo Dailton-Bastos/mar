@@ -7,6 +7,16 @@ type AppContextType = {
   isLoadingProgress: boolean;
   updateProgress: (progress: Progress) => void;
   deleteProgress: (id: number) => void;
+  settings: {
+    days: number;
+    hours: number;
+    mining: number;
+  };
+  handleSetSettings: (settings: {
+    days: number;
+    hours: number;
+    mining: number;
+  }) => void;
 };
 
 const AppContext = React.createContext<AppContextType>({
@@ -15,6 +25,12 @@ const AppContext = React.createContext<AppContextType>({
   isLoadingProgress: false,
   updateProgress: () => {},
   deleteProgress: () => {},
+  settings: {
+    days: 0,
+    hours: 0,
+    mining: 0,
+  },
+  handleSetSettings: () => {},
 });
 
 export { AppContext };

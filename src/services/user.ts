@@ -9,6 +9,14 @@ const getUserByEmail = async (email: string) => {
   return user;
 };
 
+const getUserById = async (id: number) => {
+  const user = await db.user.findUnique({
+    where: { id },
+  });
+
+  return user;
+};
+
 const createUser = async (user: Prisma.UserCreateInput) => {
   const newUser = await db.user.create({
     data: user,
@@ -17,4 +25,4 @@ const createUser = async (user: Prisma.UserCreateInput) => {
   return newUser;
 };
 
-export { getUserByEmail, createUser };
+export { getUserByEmail, createUser, getUserById };

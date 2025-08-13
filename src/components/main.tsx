@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 
 import Calendar from '@/components/shared/calendar';
 import Progress from '@/components/progress';
@@ -9,6 +10,7 @@ import Form from '@/components/form';
 import { useApp } from '@/hooks/useApp';
 import { IconLoading } from './shared/icon-loading';
 import ProgressDateModal from './progress-date';
+import IconSettings from './shared/icon-settings';
 
 export const Main = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -42,7 +44,13 @@ export const Main = () => {
   };
 
   return (
-    <div className="w-full h-full flex items-center justify-center">
+    <div className="w-full h-full flex items-center justify-center flex-col">
+      <div className="w-full flex items-center justify-end p-4 max-w-96 mx-auto">
+        <Link href="/settings">
+          <IconSettings />
+        </Link>
+      </div>
+
       <main className="flex flex-col items-center justify-center rounded-lg p-6 border border-gray-200 shadow-md">
         <Calendar onSelect={handleSelectDate} selectedDate={selectedDate} />
         {isLoadingProgress ? (

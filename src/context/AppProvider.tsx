@@ -12,6 +12,11 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [progress, setProgress] = useState<Progress[]>([]);
   const [isLoadingProgress, setIsLoadingProgress] = useState(false);
+  const [settings, setSettings] = useState({
+    days: 0,
+    hours: 0,
+    mining: 0,
+  });
 
   const getUser = useCallback(async () => {
     const session = await currentUser();
@@ -52,6 +57,13 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
     setProgress((prev) => prev.filter((progress) => progress.id !== id));
   }, []);
 
+  const handleSetSettings = useCallback(
+    (newSettings: { days: number; hours: number; mining: number }) => {
+      setSettings(newSettings);
+    },
+    []
+  );
+
   useEffect(() => {
     getUser();
   }, [getUser]);
@@ -68,6 +80,8 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
         isLoadingProgress,
         updateProgress,
         deleteProgress,
+        settings,
+        handleSetSettings,
       }}
     >
       {children}

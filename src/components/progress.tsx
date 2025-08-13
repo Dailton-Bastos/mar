@@ -4,12 +4,8 @@ import React from 'react';
 import ProgressBar from '@ramonak/react-progress-bar';
 import { useApp } from '@/hooks/useApp';
 
-const MAX_DAYS = 100;
-const MAX_HOURS = 100;
-const MAX_MINING = 1000;
-
 const Progress = () => {
-  const { progress } = useApp();
+  const { progress, settings } = useApp();
 
   const uniqueDays = [
     ...new Set(
@@ -31,9 +27,12 @@ const Progress = () => {
   const totalMining =
     progress?.reduce((acc, curr) => acc + curr.mining, 0) || 0;
 
-  const completedDaysPercentage = (totalDays / MAX_DAYS) * 100;
-  const completedHoursPercentage = (hours / MAX_HOURS) * 100;
-  const completedMiningPercentage = (totalMining / MAX_MINING) * 100;
+  const completedDaysPercentage =
+    settings.days > 0 ? (totalDays / settings.days) * 100 : 0;
+  const completedHoursPercentage =
+    settings.hours > 0 ? (hours / settings.hours) * 100 : 0;
+  const completedMiningPercentage =
+    settings.mining > 0 ? (totalMining / settings.mining) * 100 : 0;
 
   const completedPercentage = Math.round(
     (completedDaysPercentage +
@@ -52,7 +51,7 @@ const Progress = () => {
         <div className="flex flex-col items-start justify-center">
           <span className="text-sm text-blue-800 font-semibold">Dias</span>
           <span className="text-sm text-gray-500">
-            {totalDays}/{MAX_DAYS}
+            {totalDays}/{settings.days}
           </span>
         </div>
 
@@ -61,7 +60,7 @@ const Progress = () => {
         <div className="flex flex-col items-start justify-center">
           <span className="text-sm text-blue-800 font-semibold">Horas</span>
           <span className="text-sm text-gray-500">
-            {formattedHours}/{MAX_HOURS}
+            {formattedHours}/{settings.hours}
           </span>
         </div>
 
@@ -70,7 +69,7 @@ const Progress = () => {
         <div className="flex flex-col items-start justify-center">
           <span className="text-sm text-blue-800 font-semibold">Mineração</span>
           <span className="text-sm text-gray-500">
-            {totalMining}/{MAX_MINING}
+            {totalMining}/{settings.mining}
           </span>
         </div>
       </div>
