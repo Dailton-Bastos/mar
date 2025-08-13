@@ -48,6 +48,10 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
     setProgress((prev) => [...prev, newProgress]);
   }, []);
 
+  const deleteProgress = useCallback((id: number) => {
+    setProgress((prev) => prev.filter((progress) => progress.id !== id));
+  }, []);
+
   useEffect(() => {
     getUser();
   }, [getUser]);
@@ -58,7 +62,13 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AppContext.Provider
-      value={{ user, progress, isLoadingProgress, updateProgress }}
+      value={{
+        user,
+        progress,
+        isLoadingProgress,
+        updateProgress,
+        deleteProgress,
+      }}
     >
       {children}
     </AppContext.Provider>

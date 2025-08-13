@@ -1,6 +1,10 @@
 'use server';
 
-import { addProgress, getUserAllProgress } from '@/services/progress';
+import {
+  addProgress,
+  deleteProgress,
+  getUserAllProgress,
+} from '@/services/progress';
 import type { Prisma } from '@prisma/client';
 
 const addProgressAction = async (progress: Prisma.ProgressCreateInput) => {
@@ -35,4 +39,19 @@ const getUserAllProgressAction = async (userId: number) => {
   }
 };
 
-export { addProgressAction, getUserAllProgressAction };
+const deleteProgressAction = async (id: number) => {
+  try {
+    await deleteProgress(id);
+    return {
+      success: true,
+      message: 'Progress deleted successfully',
+    };
+  } catch {
+    return {
+      success: false,
+      message: 'Failed to delete progress',
+    };
+  }
+};
+
+export { addProgressAction, getUserAllProgressAction, deleteProgressAction };

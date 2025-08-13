@@ -1,19 +1,42 @@
 import type { Progress } from '@prisma/client';
-import React from 'react';
+import React, { useState } from 'react';
 import { Modal } from 'react-responsive-modal';
 import IconTrash from './shared/icon-trash';
+import { deleteProgressAction } from '@/actions/progress';
+import { useApp } from '@/hooks/useApp';
 
 type ProgressDateProps = {
   open: boolean;
   onClose: () => void;
   progressList: Progress[];
+  selectedDate: Date;
 };
 
 const ProgressDateModal = ({
   open,
   onClose,
   progressList = [],
+  selectedDate,
 }: ProgressDateProps) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const { deleteProgress } = useApp();
+
+  const handleDeleteProgress = async (id: number) => {
+    setIsLoading(true);
+    const response = await deleteProgressAction(id);
+    setIsLoading(false);
+
+    if (response.success) {
+      setErrorMessage('');
+
+      deleteProgress(id);
+    } else {
+      setErrorMessage('Erro ao deletar registro');
+    }
+  };
+
   const totalMining = progressList.reduce(
     (acc, progress) => acc + progress.mining,
     0
@@ -50,9 +73,9 @@ const ProgressDateModal = ({
         },
       }}
     >
-      <div className="w-full flex items-center justify-center">
+      <div className="w-full flex items-center justify-center pt-4">
         <span className="text-sm text-gray-500 font-semibold">
-          {progressList[0].date.toLocaleDateString('pt-BR')}
+          {selectedDate.toLocaleDateString('pt-BR')}
         </span>
       </div>
 
@@ -87,6 +110,8 @@ const ProgressDateModal = ({
                 <button
                   type="button"
                   className="text-sm text-red-500 font-semibold"
+                  disabled={isLoading}
+                  onClick={() => handleDeleteProgress(progress.id)}
                 >
                   <IconTrash />
                 </button>
@@ -102,6 +127,14 @@ const ProgressDateModal = ({
           Mineração: {formattedMining}
         </span>
       </div>
+
+      {errorMessage && (
+        <div className="w-full flex items-center justify-center mt-4">
+          <span className="text-sm text-red-500 font-semibold">
+            {errorMessage}
+          </span>
+        </div>
+      )}
     </Modal>
   );
 };

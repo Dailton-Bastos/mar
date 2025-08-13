@@ -19,4 +19,12 @@ const getUserAllProgress = async (userId: number) => {
   return progress;
 };
 
-export { addProgress, getUserAllProgress };
+const deleteProgress = async (id: number) => {
+  await db.progress.delete({
+    where: {
+      id,
+    },
+  });
+};
+
+export { addProgress, getUserAllProgress, deleteProgress };

@@ -16,9 +16,10 @@ export const Main = () => {
   const [progressDateModalOpen, setProgressDateModalOpen] = useState(false);
   const { isLoadingProgress, progress: progressList } = useApp();
 
-  const progressByDate = progressList?.filter(
-    (progress) => progress.date.toDateString() === selectedDate.toDateString()
-  );
+  const progressByDate =
+    progressList?.filter(
+      (progress) => progress.date.toDateString() === selectedDate.toDateString()
+    ) || [];
 
   const handleSelectDate = (date: Date) => {
     setSelectedDate(date);
@@ -53,17 +54,15 @@ export const Main = () => {
         )}
         <AddButton onClick={handleOpenModal} />
 
-        {progressByDate && progressByDate.length > 0 && (
-          <div className="w-full flex items-center justify-center mt-4">
-            <button
-              type="button"
-              className="text-xs text-blue-800 font-semibold cursor-pointer"
-              onClick={handleOpenProgressDateModal}
-            >
-              Ver registros deste dia
-            </button>
-          </div>
-        )}
+        <div className="w-full flex items-center justify-center mt-4">
+          <button
+            type="button"
+            className="text-xs text-blue-800 font-semibold cursor-pointer underline"
+            onClick={handleOpenProgressDateModal}
+          >
+            {selectedDate.toLocaleDateString('pt-BR')}
+          </button>
+        </div>
 
         <Form
           open={modalOpen}
@@ -72,13 +71,12 @@ export const Main = () => {
           handleSelectDate={handleSelectDate}
         />
 
-        {progressByDate && progressByDate.length > 0 && (
-          <ProgressDateModal
-            open={progressDateModalOpen}
-            onClose={handleCloseProgressDateModal}
-            progressList={progressByDate}
-          />
-        )}
+        <ProgressDateModal
+          open={progressDateModalOpen}
+          onClose={handleCloseProgressDateModal}
+          progressList={progressByDate}
+          selectedDate={selectedDate}
+        />
       </main>
     </div>
   );

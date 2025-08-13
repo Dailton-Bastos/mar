@@ -6,6 +6,7 @@ type AppContextType = {
   progress: Progress[] | null;
   isLoadingProgress: boolean;
   updateProgress: (progress: Progress) => void;
+  deleteProgress: (id: number) => void;
 };
 
 const AppContext = React.createContext<AppContextType>({
@@ -13,6 +14,7 @@ const AppContext = React.createContext<AppContextType>({
   progress: [],
   isLoadingProgress: false,
   updateProgress: () => {},
+  deleteProgress: () => {},
 });
 
 export { AppContext };
