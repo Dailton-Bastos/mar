@@ -25,3 +25,11 @@ export const createOrUpdateSettings = async (
     },
   });
 };
+
+export const getSettingsByUserId = async (userId: number) => {
+  const settings = await db.settings.findFirst({
+    where: { userId },
+  });
+
+  return settings;
+};

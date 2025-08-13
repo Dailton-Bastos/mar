@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { useApp } from '@/hooks/useApp';
 import { signOut } from 'next-auth/react';
@@ -16,7 +16,7 @@ const Settings = () => {
   });
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { user, handleSetSettings } = useApp();
+  const { user, handleSetSettings, settings: appSettings } = useApp();
 
   const handleChangeDays = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSettings({ ...settings, days: Number(e.target.value) });
@@ -57,6 +57,14 @@ const Settings = () => {
     }
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    setSettings({
+      days: appSettings.days,
+      hours: appSettings.hours,
+      mining: appSettings.mining,
+    });
+  }, [appSettings]);
 
   return (
     <div className="w-full h-full flex items-center justify-center flex-col max-w-96 mx-auto">

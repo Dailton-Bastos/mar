@@ -7,6 +7,7 @@ import { Progress, User } from '@prisma/client';
 import { currentUser } from '@/actions/auth';
 import { getUserByEmailAction } from '@/actions/user';
 import { getUserAllProgressAction } from '@/actions/progress';
+import { getSettingsAction } from '@/actions/settings';
 
 const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -64,6 +65,26 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
     []
   );
 
+  const getSettings = useCallback(async () => {
+    if (!user) {
+      setSettings({ days: 0, hours: 0, mining: 0 });
+      return;
+    }
+
+    const settings = await getSettingsAction(user.id);
+
+    if (!settings.success) {
+      setSettings({ days: 0, hours: 0, mining: 0 });
+      return;
+    }
+
+    setSettings({
+      days: settings.data?.days || 0,
+      hours: settings.data?.hours || 0,
+      mining: settings.data?.mining || 0,
+    });
+  }, [user]);
+
   useEffect(() => {
     getUser();
   }, [getUser]);
@@ -71,6 +92,10 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     getProgress();
   }, [getProgress]);
+
+  useEffect(() => {
+    getSettings();
+  }, [getSettings]);
 
   return (
     <AppContext.Provider

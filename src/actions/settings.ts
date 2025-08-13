@@ -1,6 +1,9 @@
 'use server';
 
-import { createOrUpdateSettings } from '@/services/settings';
+import {
+  createOrUpdateSettings,
+  getSettingsByUserId,
+} from '@/services/settings';
 import { getUserById } from '@/services/user';
 import { Prisma } from '@prisma/client';
 
@@ -25,11 +28,26 @@ export const updateSettings = async (
       message: 'Settings updated successfully',
       data: updatedSettings,
     };
-  } catch (error) {
-    console.error(error);
+  } catch {
     return {
       success: false,
       message: 'Failed to update settings',
+    };
+  }
+};
+
+export const getSettingsAction = async (userId: number) => {
+  try {
+    const settings = await getSettingsByUserId(userId);
+
+    return {
+      success: true,
+      data: settings,
+    };
+  } catch {
+    return {
+      success: false,
+      message: 'Failed to get settings',
     };
   }
 };
