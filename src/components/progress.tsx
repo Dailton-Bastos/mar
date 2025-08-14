@@ -9,7 +9,9 @@ const Progress = () => {
 
   const uniqueDays = [
     ...new Set(
-      progress?.map((progress) => progress.date.toISOString().split('T')[0])
+      progress
+        ?.filter((progress) => progress.hours > 0 || progress.minutes > 0)
+        .map((progress) => progress.date.toISOString().split('T')[0])
     ),
   ];
 
