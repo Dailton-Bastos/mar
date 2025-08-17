@@ -5,6 +5,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { AppContext } from './AppContext';
 import { Progress, User } from '@prisma/client';
 import { getSettingsAction } from '@/actions/settings';
+import { formatDateYYYYMMDD } from '@/utils';
 
 const AppProvider = ({
   children,
@@ -69,6 +70,45 @@ const AppProvider = ({
   useEffect(() => {
     getSettings();
   }, [getSettings]);
+
+  useEffect(() => {
+    if (!progress) return;
+
+    const style = document.createElement('style');
+
+    style.id = 'react-day-picker-style';
+
+    const uniqueDays = [
+      ...new Set(
+        progress
+          ?.filter((progress) => progress.hours > 0 || progress.minutes > 0)
+          .map((progress) => formatDateYYYYMMDD(new Date(progress.date)))
+      ),
+    ];
+
+    style.innerHTML = `
+      ${uniqueDays
+        .map(
+          (day) => `
+        [data-day="${day}"]:not(.rdp-selected) .rdp-day_button {
+          background-color: #193cb8 !important;
+          color: #fff !important;
+        }
+      `
+        )
+        .join('')}
+    `;
+
+    document.head.appendChild(style);
+
+    return () => {
+      const style = document.getElementById('react-day-picker-style');
+
+      if (style) {
+        document.head.removeChild(style);
+      }
+    };
+  }, [progress]);
 
   return (
     <AppContext.Provider
