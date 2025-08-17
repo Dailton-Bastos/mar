@@ -64,12 +64,7 @@ const AppProvider = ({
   }, [currentUser]);
 
   useEffect(() => {
-    const newProgress = currentProgress.map((progress) => ({
-      ...progress,
-      date: formatDate(new Date(progress.date)),
-    }));
-
-    setProgress(newProgress);
+    setProgress(currentProgress);
   }, [currentProgress]);
 
   useEffect(() => {

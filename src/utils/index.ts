@@ -9,8 +9,6 @@ export const formatDateYYYYMMDD = (date: Date) => {
 export const formatDate = (date: Date) => {
   const newDate = new Date(date);
 
-  newDate.setHours(0, 0, 0, 0);
-
   const hour = newDate.getHours();
 
   const GTM = 3;
