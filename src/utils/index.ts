@@ -5,3 +5,21 @@ export const removeLeftZero = (value: number) => {
 export const formatDateYYYYMMDD = (date: Date) => {
   return date.toISOString().split('T')[0];
 };
+
+export const formatDate = (date: Date) => {
+  const newDate = new Date(date);
+
+  newDate.setHours(0, 0, 0, 0);
+
+  const hour = newDate.getHours();
+
+  const GTM = 3;
+
+  if (hour - GTM <= 0) {
+    newDate.setDate(newDate.getDate() - 1);
+
+    return newDate;
+  }
+
+  return newDate;
+};

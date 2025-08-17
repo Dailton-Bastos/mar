@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { AppContext } from './AppContext';
 import { Progress, User } from '@prisma/client';
 import { getSettingsAction } from '@/actions/settings';
-import { formatDateYYYYMMDD } from '@/utils';
+import { formatDate, formatDateYYYYMMDD } from '@/utils';
 
 const AppProvider = ({
   children,
@@ -64,7 +64,12 @@ const AppProvider = ({
   }, [currentUser]);
 
   useEffect(() => {
-    setProgress(currentProgress);
+    const newProgress = currentProgress.map((progress) => ({
+      ...progress,
+      date: formatDate(new Date(progress.date)),
+    }));
+
+    setProgress(newProgress);
   }, [currentProgress]);
 
   useEffect(() => {
