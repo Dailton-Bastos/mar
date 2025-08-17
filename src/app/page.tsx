@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import { Login } from '@/components/auth/login';
 
-const Home = async () => {
+const Home = () => {
   return (
     <section className="flex flex-col items-center justify-center h-screen p-4">
       <div className="flex flex-col items-center justify-center rounded-lg p-6 border border-gray-200 w-full max-w-96">

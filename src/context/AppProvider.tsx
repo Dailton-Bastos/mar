@@ -4,51 +4,24 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import { AppContext } from './AppContext';
 import { Progress, User } from '@prisma/client';
-import { currentUser } from '@/actions/auth';
-import { getUserByEmailAction } from '@/actions/user';
-import { getUserAllProgressAction } from '@/actions/progress';
 import { getSettingsAction } from '@/actions/settings';
 
-const AppProvider = ({ children }: { children: React.ReactNode }) => {
+const AppProvider = ({
+  children,
+  currentUser,
+  currentProgress,
+}: {
+  children: React.ReactNode;
+  currentUser: User | null;
+  currentProgress: Progress[];
+}) => {
   const [user, setUser] = useState<User | null>(null);
   const [progress, setProgress] = useState<Progress[]>([]);
-  const [isLoadingProgress, setIsLoadingProgress] = useState(false);
   const [settings, setSettings] = useState({
     days: 0,
     hours: 0,
     mining: 0,
   });
-
-  const getUser = useCallback(async () => {
-    const session = await currentUser();
-
-    if (!session?.email) {
-      setUser(null);
-      return;
-    }
-
-    const user = await getUserByEmailAction(session?.email);
-    setUser(user);
-  }, []);
-
-  const getProgress = useCallback(async () => {
-    if (!user) {
-      setProgress([]);
-      return;
-    }
-
-    setIsLoadingProgress(true);
-
-    const progress = await getUserAllProgressAction(user?.id);
-
-    if (!progress.success) {
-      setProgress([]);
-      return;
-    }
-
-    setProgress(progress?.data || []);
-    setIsLoadingProgress(false);
-  }, [user]);
 
   const updateProgress = useCallback((newProgress: Progress) => {
     setProgress((prev) => [...prev, newProgress]);
@@ -86,12 +59,12 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
   }, [user]);
 
   useEffect(() => {
-    getUser();
-  }, [getUser]);
+    setUser(currentUser);
+  }, [currentUser]);
 
   useEffect(() => {
-    getProgress();
-  }, [getProgress]);
+    setProgress(currentProgress);
+  }, [currentProgress]);
 
   useEffect(() => {
     getSettings();
@@ -102,7 +75,6 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
       value={{
         user,
         progress,
-        isLoadingProgress,
         updateProgress,
         deleteProgress,
         settings,

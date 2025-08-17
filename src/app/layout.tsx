@@ -1,6 +1,10 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { AppProvider } from '@/context/AppProvider';
+import { auth } from '@/auth';
+import type { Progress, User } from '@prisma/client';
+import { getUserByEmailAction } from '@/actions/user';
+import { getUserAllProgressAction } from '@/actions/progress';
 
 import './globals.css';
 import 'react-responsive-modal/styles.css';
@@ -20,11 +24,26 @@ export const metadata: Metadata = {
   description: 'Mar progress, days, hours and mining',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
+
+  let user: User | null = null;
+  let progress: Progress[] = [];
+
+  if (session?.user?.email) {
+    user = await getUserByEmailAction(session.user.email);
+    if (user) {
+      const progressResponse = await getUserAllProgressAction(user.id);
+      if (progressResponse.success) {
+        progress = progressResponse.data || [];
+      }
+    }
+  }
+
   return (
     <html lang="en">
       <head>
@@ -47,7 +66,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AppProvider>{children}</AppProvider>
+        <AppProvider currentUser={user} currentProgress={progress}>
+          {children}
+        </AppProvider>
       </body>
     </html>
   );

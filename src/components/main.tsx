@@ -8,7 +8,6 @@ import Progress from '@/components/progress';
 import AddButton from '@/components/shared/add-button';
 import Form from '@/components/form';
 import { useApp } from '@/hooks/useApp';
-import { IconLoading } from './shared/icon-loading';
 import ProgressDateModal from './progress-date';
 import IconSettings from './shared/icon-settings';
 
@@ -16,7 +15,7 @@ export const Main = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [modalOpen, setModalOpen] = useState(false);
   const [progressDateModalOpen, setProgressDateModalOpen] = useState(false);
-  const { isLoadingProgress, progress: progressList } = useApp();
+  const { progress: progressList } = useApp();
 
   const progressByDate =
     progressList?.filter(
@@ -53,13 +52,9 @@ export const Main = () => {
 
       <main className="flex flex-col items-center justify-center rounded-lg p-6 border border-gray-200 shadow-md">
         <Calendar onSelect={handleSelectDate} selectedDate={selectedDate} />
-        {isLoadingProgress ? (
-          <div className="flex items-center justify-center">
-            <IconLoading />
-          </div>
-        ) : (
-          <Progress />
-        )}
+
+        <Progress />
+
         <AddButton onClick={handleOpenModal} />
 
         <div className="w-full flex items-center justify-center mt-4">

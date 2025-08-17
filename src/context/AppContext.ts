@@ -4,7 +4,6 @@ import React from 'react';
 type AppContextType = {
   user: User | null;
   progress: Progress[] | null;
-  isLoadingProgress: boolean;
   updateProgress: (progress: Progress) => void;
   deleteProgress: (id: number) => void;
   settings: {
@@ -22,7 +21,6 @@ type AppContextType = {
 const AppContext = React.createContext<AppContextType>({
   user: null,
   progress: [],
-  isLoadingProgress: false,
   updateProgress: () => {},
   deleteProgress: () => {},
   settings: {
