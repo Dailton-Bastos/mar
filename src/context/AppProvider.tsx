@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { AppContext } from './AppContext';
 import { Progress, User } from '@prisma/client';
 import { getSettingsAction } from '@/actions/settings';
-import { formatDateYYYYMMDD } from '@/utils';
+import { convertUTCDateToLocalDate, formatDateYYYYMMDD } from '@/utils';
 
 const AppProvider = ({
   children,
@@ -69,7 +69,12 @@ const AppProvider = ({
   }, [currentUser]);
 
   useEffect(() => {
-    setProgress(currentProgress);
+    const localProgress = currentProgress.map((progress) => ({
+      ...progress,
+      date: convertUTCDateToLocalDate(progress.date),
+    }));
+
+    setProgress(localProgress);
   }, [currentProgress]);
 
   useEffect(() => {
