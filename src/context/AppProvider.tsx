@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { AppContext } from './AppContext';
 import { Progress, User } from '@prisma/client';
 import { getSettingsAction } from '@/actions/settings';
-import { formatDate, formatDateYYYYMMDD } from '@/utils';
+import { formatDateYYYYMMDD } from '@/utils';
 
 const AppProvider = ({
   children,
@@ -16,6 +16,7 @@ const AppProvider = ({
   currentUser: User | null;
   currentProgress: Progress[];
 }) => {
+  const [mounted, setMounted] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [progress, setProgress] = useState<Progress[]>([]);
   const [settings, setSettings] = useState({
@@ -60,6 +61,10 @@ const AppProvider = ({
   }, [user]);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
     setUser(currentUser);
   }, [currentUser]);
 
@@ -72,7 +77,7 @@ const AppProvider = ({
   }, [getSettings]);
 
   useEffect(() => {
-    if (!progress) return;
+    if (!mounted || !progress) return;
 
     const style = document.createElement('style');
 
@@ -108,7 +113,9 @@ const AppProvider = ({
         document.head.removeChild(style);
       }
     };
-  }, [progress]);
+  }, [mounted, progress]);
+
+  if (!mounted) return null;
 
   return (
     <AppContext.Provider
